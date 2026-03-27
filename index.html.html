@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Sis! 🌷</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-deep: #3b0764;
+    --purple-mid:  #7c3aed;
+    --purple-soft: #c084fc;
+    --purple-light:#e9d5ff;
+    --purple-pale: #faf5ff;
+    --gold:        #f59e0b;
+    --rose:        #ec4899;
+    --white:       #fff9fe;
+  }
+ 
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+ 
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--purple-pale);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+ 
+  /* ══════════════════════════════
+     FLOATING PETALS (global)
+  ══════════════════════════════ */
+  #petals {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    border-radius: 60% 40% 60% 40% / 50% 50% 50% 50%;
+    opacity: 0;
+    animation: petalFall linear infinite;
+  }
+  @keyframes petalFall {
+    0%   { transform: translateY(-60px) rotate(0deg) scale(1);   opacity: .75; }
+    100% { transform: translateY(110vh)  rotate(400deg) scale(.6); opacity: 0; }
+  }
+ 
+  /* ══════════════════════════════
+     PAGE SYSTEM
+  ══════════════════════════════ */
+  .page {
+    display: none;
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    animation: pageIn .7s ease both;
+  }
+  .page.active { display: flex; flex-direction: column; }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+ 
+  /* ══════════════════════════════
+     PAGE 1 — NAME ENTRY
+  ══════════════════════════════ */
+  #page1 {
+    align-items: center; justify-content: center;
+    padding: 40px 24px;
+    background:
+      radial-gradient(ellipse at 15% 20%, #d8b4fe44 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 80%, #a855f733 0%, transparent 55%),
+      linear-gradient(160deg, #faf5ff 0%, #ede9fe 60%, #ddd6fe 100%);
+  }
+ 
+  .entry-card {
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(18px);
+    border: 1.5px solid #d8b4fe;
+    border-radius: 32px;
+    padding: 60px 52px 52px;
+    max-width: 480px; width: 100%;
+    box-shadow: 0 20px 60px #7c3aed18, 0 2px 0 #fff inset;
+    text-align: center;
+  }
+ 
+  .entry-icon { font-size: 72px; margin-bottom: 20px; display: block;
+    animation: bounce 2s ease-in-out infinite alternate; }
+  @keyframes bounce {
+    from { transform: translateY(0) rotate(-5deg); }
+    to   { transform: translateY(-12px) rotate(5deg); }
+  }
+ 
+  .entry-card h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 6vw, 40px);
+    color: var(--purple-deep);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .entry-card h1 em { color: var(--purple-mid); font-style: italic; }
+ 
+  .entry-card p {
+    font-size: 17px; color: #6d28d9; font-weight: 300;
+    margin-bottom: 36px; line-height: 1.6;
+  }
+ 
+  .input-wrap { position: relative; margin-bottom: 28px; }
+  .input-wrap input {
+    width: 100%;
+    padding: 18px 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--purple-deep);
+    background: rgba(237,233,254,.5);
+    border: 2px solid #c4b5fd;
+    border-radius: 16px;
+    outline: none;
+    transition: border-color .25s, box-shadow .25s;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .input-wrap input::placeholder { color: #a78bfa; }
+  .input-wrap input:focus {
+    border-color: var(--purple-mid);
+    box-shadow: 0 0 0 4px #7c3aed22;
+  }
+ 
+  .btn-primary {
+    width: 100%;
+    padding: 18px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #fff;
+    background: linear-gradient(135deg, var(--purple-mid), var(--purple-deep));
+    border: none; border-radius: 16px; cursor: pointer;
+    box-shadow: 0 8px 28px #7c3aed44;
+    transition: transform .18s, box-shadow .18s;
+    letter-spacing: .5px;
+  }
+  .btn-primary:hover { transform: scale(1.03); box-shadow: 0 12px 36px #7c3aed66; }
+ 
+  .err { color: var(--rose); font-size: 14px; margin-top: 10px; min-height: 18px; }
+ 
+  /* ══════════════════════════════
+     PAGE 2 — MAIN BIRTHDAY
+  ══════════════════════════════ */
+  #page2 {
+    background:
+      radial-gradient(ellipse at 20% 30%, #d4a0f022 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 70%, #9b30cc18 0%, transparent 55%),
+      linear-gradient(160deg, #faf5ff 0%, #ede9fe 55%, #c4b5fd55 100%);
+  }
+ 
+  /* Hero */
+  .hero2 {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 70px 24px 50px;
+    position: relative;
+  }
+ 
+  .name-crown {
+    font-size: 13px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--purple-mid); margin-bottom: 12px;
+  }
+ 
+  .cake-float {
+    font-size: 100px; line-height: 1;
+    filter: drop-shadow(0 8px 24px #9b30cc55);
+    animation: floatAnim 3s ease-in-out infinite alternate;
+    margin-bottom: 8px;
+  }
+  @keyframes floatAnim {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-16px); }
+  }
+ 
+  .tulip-row2 {
+    display: flex; gap: 8px; justify-content: center;
+    font-size: 36px; margin-bottom: 28px;
+  }
+  .tulip-row2 span {
+    display: inline-block;
+    animation: sway2 2.2s ease-in-out infinite alternate;
+  }
+  .tulip-row2 span:nth-child(even) { animation-delay: .5s; }
+  @keyframes sway2 {
+    from { transform: rotate(-7deg); }
+    to   { transform: rotate(7deg); }
+  }
+ 
+  .main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 8vw, 78px);
+    color: var(--purple-deep);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .main-title em { color: var(--purple-mid); font-style: italic; }
+ 
+  .sister-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 7vw, 64px);
+    color: var(--gold);
+    font-style: italic;
+    text-shadow: 0 2px 16px #f59e0b44;
+    margin-bottom: 18px;
+  }
+ 
+  .date-pill {
+    display: inline-block;
+    background: var(--purple-mid);
+    color: #fff;
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    padding: 8px 24px; border-radius: 40px;
+    margin-bottom: 28px;
+  }
+ 
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+ 
+  .btn-gold {
+    padding: 14px 30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-style: italic;
+    color: var(--purple-deep);
+    background: linear-gradient(135deg, #fde68a, var(--gold));
+    border: none; border-radius: 50px; cursor: pointer;
+    box-shadow: 0 4px 20px #f59e0b44;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .btn-gold:hover { transform: scale(1.06); box-shadow: 0 8px 28px #f59e0b66; }
+ 
+  .btn-outline {
+    padding: 14px 30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-style: italic;
+    color: var(--purple-mid);
+    background: transparent;
+    border: 2px solid var(--purple-mid);
+    border-radius: 50px; cursor: pointer;
+    transition: background .18s, color .18s;
+  }
+  .btn-outline:hover { background: var(--purple-mid); color: #fff; }
+ 
+  /* Letter */
+  .letter-wrap {
+    max-width: 800px; margin: 0 auto;
+    padding: 20px 24px 60px;
+  }
+ 
+  .sec-divider {
+    text-align: center; font-size: 26px;
+    letter-spacing: 10px; padding: 10px 0 30px;
+  }
+ 
+  .letter-card2 {
+    background: linear-gradient(135deg, #fff9fe, #f3e2fc);
+    border: 1.5px solid #d8aef5;
+    border-radius: 28px;
+    padding: 56px 56px 48px;
+    box-shadow: 0 4px 50px #9b30cc18, inset 0 1px 0 #fff;
+    position: relative; overflow: hidden;
+  }
+  .letter-card2::before {
+    content: '🌷';
+    position: absolute; top: -14px; right: 24px;
+    font-size: 90px; opacity: .07; transform: rotate(20deg);
+  }
+ 
+  .letter-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; color: var(--purple-deep);
+    font-style: italic; margin-bottom: 22px;
+  }
+  .letter-body2 {
+    font-size: 18px; line-height: 1.95;
+    color: #3d1254; font-weight: 300;
+  }
+  .letter-body2 p { margin-bottom: 16px; }
+ 
+  .letter-sign2 {
+    margin-top: 30px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 20px;
+    color: var(--purple-mid);
+  }
+ 
+  /* ══════════════════════════════
+     PAGE 3 — SHORT NOTE
+  ══════════════════════════════ */
+  #page3 {
+    align-items: center; justify-content: center;
+    padding: 60px 24px;
+    background: linear-gradient(160deg, var(--purple-deep) 0%, #1e0438 100%);
+    position: relative; overflow: hidden;
+  }
+  #page3::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, #7c3aed55 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, #9b30cc44 0%, transparent 50%);
+  }
+ 
+  .note-glass {
+    position: relative; z-index: 1;
+    max-width: 700px; width: 100%;
+    background: rgba(255,255,255,.07);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 32px;
+    padding: 64px 60px 56px;
+    text-align: center;
+    box-shadow: 0 24px 80px rgba(0,0,0,.4);
+  }
+ 
+  .note-emoji-row {
+    font-size: 40px; margin-bottom: 24px;
+    display: flex; gap: 12px; justify-content: center;
+  }
+  .note-emoji-row span { animation: pulse 2s ease-in-out infinite alternate; }
+  .note-emoji-row span:nth-child(2) { animation-delay: .4s; }
+  .note-emoji-row span:nth-child(3) { animation-delay: .8s; }
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.2); }
+  }
+ 
+  .note-label3 {
+    font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--purple-soft); margin-bottom: 14px;
+  }
+ 
+  .note-name3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 6vw, 46px);
+    font-style: italic; color: var(--gold);
+    margin-bottom: 32px;
+    text-shadow: 0 2px 20px #f59e0b44;
+  }
+ 
+  .note-text3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 3vw, 21px);
+    font-style: italic; line-height: 1.85;
+    color: #f0e6ff;
+  }
+  .note-text3 p { margin-bottom: 14px; }
+  .note-text3 p:last-child { margin-bottom: 0; }
+ 
+  .note-divider {
+    width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple-soft), transparent);
+    margin: 32px auto;
+  }
+ 
+  .p3-btns {
+    margin-top: 40px;
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  }
+ 
+  .btn-light {
+    padding: 14px 28px;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-style: italic;
+    color: var(--purple-deep);
+    background: var(--purple-light);
+    border: none; border-radius: 50px; cursor: pointer;
+    transition: transform .18s, background .18s;
+  }
+  .btn-light:hover { transform: scale(1.05); background: #fff; }
+ 
+  .btn-outline2 {
+    padding: 14px 28px;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-style: italic;
+    color: var(--purple-soft);
+    background: transparent;
+    border: 1.5px solid var(--purple-soft);
+    border-radius: 50px; cursor: pointer;
+    transition: background .18s, color .18s;
+  }
+  .btn-outline2:hover { background: var(--purple-soft); color: var(--purple-deep); }
+ 
+  footer {
+    text-align: center; padding: 20px;
+    font-size: 12px; letter-spacing: 2px;
+    color: rgba(255,255,255,.3);
+  }
+ 
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+  @media (max-width: 600px) {
+    .entry-card   { padding: 36px 22px 32px; }
+    .letter-card2 { padding: 32px 22px 28px; }
+    .note-glass   { padding: 40px 24px 36px; }
+  }
+ 
+  /* ══════════════════════════════
+     CAT STYLES
+  ══════════════════════════════ */
+  .cat-walk {
+    position: fixed;
+    bottom: 18px; left: -80px;
+    font-size: 38px;
+    z-index: 999;
+    pointer-events: none;
+    animation: catWalk 14s linear infinite;
+    filter: drop-shadow(0 4px 8px #7c3aed44);
+  }
+  @keyframes catWalk {
+    0%   { left: -80px;  transform: scaleX(1); }
+    48%  { left: 105%;   transform: scaleX(1); }
+    50%  { left: 105%;   transform: scaleX(-1); }
+    98%  { left: -80px;  transform: scaleX(-1); }
+    100% { left: -80px;  transform: scaleX(1); }
+  }
+ 
+  .cat-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: rgba(196,181,253,.25);
+    border: 1.5px solid #c4b5fd;
+    border-radius: 20px;
+    padding: 18px 24px;
+    margin: 24px 0 0;
+    font-size: 15px;
+    color: #4c1d95;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .cat-card .cat-big { font-size: 44px; flex-shrink: 0; animation: catBob 1.8s ease-in-out infinite alternate; }
+  @keyframes catBob {
+    from { transform: translateY(0) rotate(-4deg); }
+    to   { transform: translateY(-8px) rotate(4deg); }
+  }
+ 
+  .cat-paws {
+    display: flex; gap: 6px; justify-content: center;
+    font-size: 22px; margin: 12px 0 0;
+    letter-spacing: 4px;
+  }
+ 
+  .entry-cat {
+    font-size: 52px;
+    display: block;
+    animation: catBob 1.8s ease-in-out infinite alternate;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+ 
+<!-- Global petals -->
+<div id="petals"></div>
+ 
+<!-- Walking cat across all pages -->
+<div class="cat-walk">🐱</div>
+ 
+<!-- ═══════════════════════════════
+     PAGE 1 — NAME ENTRY
+═══════════════════════════════ -->
+<div id="page1" class="page active">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;
+    background:radial-gradient(ellipse at 15% 20%,#d8b4fe44 0%,transparent 55%),
+               radial-gradient(ellipse at 85% 80%,#a855f733 0%,transparent 55%),
+               linear-gradient(160deg,#faf5ff 0%,#ede9fe 60%,#ddd6fe 100%);">
+    <div class="entry-card">
+      <span class="entry-icon">🌷</span>
+      <h1>A Birthday Surprise <em>Just for You!</em></h1>
+      <p>Enter your name to open your special birthday gift 💜</p>
+      <div class="input-wrap">
+        <input type="text" id="nameInput" placeholder="Your beautiful name..." maxlength="30" />
+      </div>
+      <button class="btn-primary" onclick="goToPage2()">
+        Open the Gift 🎁
+      </button>
+      <p class="err" id="nameErr"></p>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══════════════════════════════
+     PAGE 2 — MAIN BIRTHDAY
+═══════════════════════════════ -->
+<div id="page2" class="page">
+ 
+  <!-- Hero -->
+  <div class="hero2">
+    <p class="name-crown">✨ A very special day for ✨</p>
+    <div class="cake-float">🎂</div>
+    <div class="tulip-row2">
+      <span>🌷</span><span>🐱</span><span>🌷</span><span>🐱</span><span>🌷</span>
+    </div>
+    <h1 class="main-title">Happy Birthday,</h1>
+    <div class="sister-name" id="heroName">Your Sister</div>
+    <div class="date-pill">🎉 31 July 🎉</div>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="burst()">🎉 Celebrate!</button>
+      <button class="btn-outline" onclick="goToPage3()">Read Short Note 🌷</button>
+    </div>
+  </div>
+ 
+  <!-- Letter -->
+  <div class="letter-wrap">
+    <div class="sec-divider">🌷 &nbsp; 💜 &nbsp; 🌷</div>
+    <div class="letter-card2">
+      <p class="letter-head">My Dearest <span id="letterName">Sister</span>,</p>
+      <div class="letter-body2">
+        <p>
+          On this beautiful day, as the world blooms a little brighter and the air feels a little
+          sweeter, I want to take a moment to celebrate the most extraordinary person I know —
+          <strong>you</strong>.
+        </p>
+        <p>
+          You bring so much colour into every room you walk into — like a bouquet of the most vibrant
+          purple tulips standing tall and graceful in the golden morning light. Your laughter is
+          contagious, your heart is boundless, and your spirit is one of a kind.
+        </p>
+        <p>
+          Life with you has been the greatest gift. From stolen bites of cake 🎂 to late-night secrets,
+          from your silliest jokes to your wisest words — every memory with you is a treasure I hold
+          close. You are not just my sister; you are my person, my safe place, my forever home.
+        </p>
+        <p>
+          On your special day, I wish for you a life overflowing with joy, love, and every beautiful
+          thing your heart desires. May this year bring you adventures that make your eyes sparkle,
+          moments that make you smile in the quiet of the night, and happiness that wraps around you
+          like a warm, purple twilight.
+        </p>
+        <p>You deserve every single candle on that cake — and so much more. 🌷</p>
+      </div>
+ 
+      <!-- Cat card -->
+      <div class="cat-card">
+        <span class="cat-big">🐱</span>
+        <span>Just like your favourite little furball who curls up close and purrs with love —
+        you bring that same warmth, comfort and joy into every life you touch. 🐾💜</span>
+      </div>
+      <div class="cat-paws">🐾 🐾 🐾 🐾 🐾</div>
+ 
+      <div class="letter-sign2">
+        Forever your biggest fan &amp; partner-in-crime,<br>
+        <strong>Your Sibling 💜</strong>
+      </div>
+    </div>
+ 
+    <div style="text-align:center;margin-top:40px;">
+      <button class="btn-outline" onclick="goToPage3()" style="font-size:17px;padding:16px 36px;">
+        Continue to Short Note 🌷 →
+      </button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ═══════════════════════════════
+     PAGE 3 — SHORT NOTE
+═══════════════════════════════ -->
+<div id="page3" class="page">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100vh;padding:60px 24px;
+    background:linear-gradient(160deg,#3b0764 0%,#1e0438 100%);
+    position:relative;overflow:hidden;">
+ 
+    <!-- bg glow -->
+    <div style="position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(ellipse at 20% 20%,#7c3aed55 0%,transparent 50%),
+                radial-gradient(ellipse at 80% 80%,#9b30cc44 0%,transparent 50%);"></div>
+ 
+    <div class="note-glass">
+      <div class="note-emoji-row">
+        <span>🎂</span><span>🌷</span><span>❤️</span>
+      </div>
+ 
+      <p class="note-label3">A short note · just for you</p>
+      <div class="note-name3" id="noteName">Dear Sister</div>
+ 
+      <div class="note-text3">
+        <p>On your special day, I just want to tell you how much you mean to me.</p>
+        <p>You are not just my sister, but also my best friend, my support system, and my biggest happiness.</p>
+        <p>Your smile makes everything better, and your presence fills my life with joy and love.</p>
+        <p>I am so lucky to have a sister like you.</p>
+        <p>May your life be filled with endless happiness, success, and beautiful moments.</p>
+        <p>Keep shining and spreading your kindness everywhere.</p>
+        <p>Happy Birthday once again! 🎂❤️</p>
+      </div>
+ 
+      <div class="note-divider"></div>
+ 
+      <div class="p3-btns">
+        <button class="btn-light" onclick="goToPage2()">← Back to Celebration</button>
+        <button class="btn-outline2" onclick="burst()">🎉 Celebrate Again!</button>
+        <button class="btn-light" onclick="goToPage1()">🔄 Start Over</button>
+      </div>
+    </div>
+ 
+    <footer>Made with 💜 just for you · 31 July</footer>
+  </div>
+</div>
+ 
+<script>
+  /* ── Floating petals ── */
+  const colors = ['#c084fc','#a855f7','#d8b4fe','#7c3aed','#e9d5ff','#f3c4ff','#ec4899'];
+  const petalContainer = document.getElementById('petals');
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const size = 10 + Math.random() * 14;
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      width: ${size}px; height: ${size*1.6}px;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration: ${5+Math.random()*9}s;
+      animation-delay: ${Math.random()*12}s;
+    `;
+    petalContainer.appendChild(p);
+  }
+ 
+  /* ── Page navigation ── */
+  let sisterName = 'Sister';
+ 
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById(id);
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+ 
+  function goToPage1() { showPage('page1'); }
+ 
+  function goToPage2() {
+    const val = document.getElementById('nameInput').value.trim();
+    if (!val) {
+      document.getElementById('nameErr').textContent = '✨ Please enter her name to continue!';
+      return;
+    }
+    document.getElementById('nameErr').textContent = '';
+    sisterName = val;
+    document.getElementById('heroName').textContent = sisterName;
+    document.getElementById('letterName').textContent = sisterName;
+    document.getElementById('noteName').textContent = 'Dear ' + sisterName;
+    showPage('page2');
+  }
+ 
+  function goToPage3() { showPage('page3'); }
+ 
+  /* ── Enter key on input ── */
+  document.getElementById('nameInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') goToPage2();
+  });
+ 
+  /* ── Confetti burst ── */
+  const burstStyle = document.createElement('style');
+  burstStyle.textContent = `
+    @keyframes burstAnim {
+      0%   { transform: translate(0,0) scale(1); opacity:1; }
+      100% { transform: translate(var(--dx),var(--dy)) scale(.2); opacity:0; }
+    }
+  `;
+  document.head.appendChild(burstStyle);
+ 
+  function burst() {
+    const emojis = ['🎂','🌷','💜','🎉','✨','🎈','🎁','❤️','🌸','⭐','🐱','🐾'];
+    for (let i = 0; i < 50; i++) {
+      const el = document.createElement('div');
+      el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      const dx = (Math.random()-.5)*500;
+      const dy = -(120+Math.random()*320);
+      el.style.cssText = `
+        position:fixed;
+        font-size:${14+Math.random()*22}px;
+        left:${25+Math.random()*50}%;
+        top:45%;
+        pointer-events:none;
+        z-index:9999;
+        --dx:${dx}px; --dy:${dy}px;
+        animation:burstAnim ${.7+Math.random()*1.3}s ease-out forwards;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2500);
+    }
+  }
+</script>
+</body>
+</html>
+ 
